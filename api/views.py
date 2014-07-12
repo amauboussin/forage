@@ -9,6 +9,15 @@ from constants import *
 import json
 
 
+# tl_lat_orig = 37.433711
+# tl_long_orig = -122.110664
+# br_lat = tl_lat - 0.001
+# br_long = tl_long - 0.001
+# tl_lat_final = 37.357442
+# tl_long_final = -122.058908
+# DIFF_LAT = -0.076269
+# DIFF_LONG = 0.051756
+
 def get_loc(address):
     address = address.replace(' ', '+')
     print address
@@ -48,7 +57,11 @@ def scrape(request):
         name = b['name']
 
         address = ','.join(filter(lambda x : len(x) > 0 , [b['address1'], b['address2'], b['address3'], b['city']]))
+
+        #skip if no address or if the address already exists
         if len(b['address1']) == 0 : continue
+        if Yelp.objects.filter(address= address).exists(): continue
+
 
         genre = get_genre(b, food_cats)
         if genre is None: continue
