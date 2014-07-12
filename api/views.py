@@ -26,11 +26,10 @@ def get_loc(address):
         jsonurl = urlopen(loc_req)
         data = json.loads(jsonurl.read())
         loc = data['results'][0]['geometry']['location']
-        print loc
         return loc['lat'], loc['lng']
     except Exception, e:
         print str(e)
-    return 0,0
+        return 0,0
 
 def get_genre(b, food_cats):
     categories = b['categories']
