@@ -17,4 +17,7 @@ urlpatterns = patterns('',
 
     #url()
     url(r'test',views.test )
+
+    #locate()
+    url(r'locate', views.locate )
 )
