@@ -204,13 +204,13 @@ def get_restaurants(latitude, longitude):
         if restaurant.yelp_rating != 0:
             return restaurant.yelp_rating
 
-        return restaurant.goog_rating 
+        return restaurant.goog_rating
 
     def calculate_score(restaurant):
         rst_lat = restaurant.latitude
         rst_long = restaurant.longitude
         distance = math.hypot(latitude - rst_lat, longitude - rst_long) # pythagorean theorem
-        rating = getAverageRating(restaurant)
+        rating = get_average_rating(restaurant)
         score = 0.85 * distance + 0.15 * rating
         return [score, restaurant]
 
