@@ -4,7 +4,6 @@
     <list default="true" id="3eaf9871-2f03-455a-a37c-52aafe4b5c5c" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forage/urls.py" afterPath="$PROJECT_DIR$/forage/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/views.py" afterPath="$PROJECT_DIR$/api/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="forage.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -52,19 +51,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="urls.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="urls.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/forage/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="19" column="1" selection-start="613" selection-end="613" vertical-scroll-proportion="0.40785497">
+            <state line="19" column="4" selection-start="617" selection-end="617" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/api/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="67" column="40" selection-start="3531" selection-end="3531" vertical-scroll-proportion="0.0">
+            <state line="99" column="0" selection-start="4658" selection-end="4658" vertical-scroll-proportion="0.6533128">
               <folding />
             </state>
           </provider>
@@ -110,8 +109,8 @@
         <option value="$PROJECT_DIR$/api/models.py" />
         <option value="$PROJECT_DIR$/templates/test.html" />
         <option value="$PROJECT_DIR$/api/constants.py" />
-        <option value="$PROJECT_DIR$/api/views.py" />
         <option value="$PROJECT_DIR$/forage/urls.py" />
+        <option value="$PROJECT_DIR$/api/views.py" />
       </list>
     </option>
   </component>
@@ -537,16 +536,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/api/views.py">
+    <entry file="file://$PROJECT_DIR$/forage/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="67" column="40" selection-start="3531" selection-end="3531" vertical-scroll-proportion="0.0">
+        <state line="19" column="4" selection-start="617" selection-end="617" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/forage/urls.py">
+    <entry file="file://$PROJECT_DIR$/api/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="1" selection-start="613" selection-end="613" vertical-scroll-proportion="0.40785497">
+        <state line="99" column="0" selection-start="4658" selection-end="4658" vertical-scroll-proportion="0.6533128">
           <folding />
         </state>
       </provider>

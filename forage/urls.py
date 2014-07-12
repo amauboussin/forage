@@ -16,5 +16,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     #url()
-    url(r'scrape',views.scrape )
+    url(r'scrape',views.scrape ),
+    url(r'locate', views.locate )
+
 )
