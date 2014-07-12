@@ -204,7 +204,7 @@ def get_restaurants(latitude, longitude):
         if restaurant.yelp_rating != 0:
             return restaurant.yelp_rating
 
-        return restaurant.goog_rating 
+        return restaurant.goog_rating
 
     def calculate_score(restaurant):
         rst_lat = restaurant.latitude
