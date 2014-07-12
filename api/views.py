@@ -8,6 +8,57 @@ from urllib2 import urlopen
 from constants import *
 import json
 
+def merge_restaurants(request):
+    g_places = GPlace.objects.all()
+    yelps = Yelp.objects.all()
+    restaurants = []
+    for g in g_places:
+        r = {
+            'place_id': g.place_id,
+            'name': g.name,
+            'address': g.address,
+            'latitude': g.latitude,
+            'longitude': g.longitude,
+            'goog_rating': g.average_rating,
+            'hours': g.hours,
+            'price': g.price,
+            'yelp_rating': 0,
+            'num_yelp_ratings': 0,
+            '_id': g.address.lower()
+        }
+        restaurants.append(r)
+    for y in yelps:
+        r = {
+            'name': y.name,
+            'address': y.address,
+            'genre': y.genre,
+            'latitude': y.latitude,
+            'longitude': y.longitude,
+            'yelp_rating': y.average_rating,
+            'num_yelp_ratings': y.num_ratings,
+            'hours': y.hours,
+            'goog_rating': 0,
+            'price': -1,
+            'place_id': 0,
+            '_id': y.address.lower()
+        }
+        is_dup = false
+        for g in restaurants:
+            if g._id == r._id:
+                is_dup = True
+                g.genre = r.genre
+                g.yelp_rating = r.yelp_rating
+                g.num_yelp_ratings = r.num_yelp_ratings
+        if not is_dup:
+            restaurants.append(r)
+
+    for r in restaurants:
+        r2 = Restaurant2(**r)
+        r2.save()
+
+
+    return render_to_response('test.html', {'message' : 'finished merging'}, context_instance=RequestContext(request))
+
 
 def scrape_grid_page(request):
     scrape_grid()
