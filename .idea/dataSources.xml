@@ -3,7 +3,9 @@
   <component name="DataSourceManagerImpl" format="xml" hash="1664006667">
     <data-source source="LOCAL" name="Django default" product="" version="" jdbc-version="" driver-name="" driver-version="" uuid="915856b4-2e14-4fc8-a941-eb9c72496dd2">
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://127.0.0.1:5432/forage</jdbc-url>
+      <jdbc-url>jdbc:postgresql://127.0.0.1:8889/forage</jdbc-url>
+      <user-name>root</user-name>
+      <user-password>dfd8dfc5dfc5dfde</user-password>
       <libraries>
         <library>
           <url>file://$USER_HOME$/Library/Preferences/PyCharm20/jdbc-drivers/postgresql-driver-license.txt</url>
