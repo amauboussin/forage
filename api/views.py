@@ -152,7 +152,7 @@ def get_restaurants(latitude, longitude):
         if restaurant.yelp_rating != 0:
             return restaurant.yelp_rating
 
-        return restaurant.goog_rating
+        return restaurant.goog_rating 
 
     def calculate_score(restaurant):
         rst_lat = restaurant.latitude
@@ -162,7 +162,7 @@ def get_restaurants(latitude, longitude):
         score = 0.85 * distance + 0.15 * rating
         return [score, restaurant]
 
-    restaurantsWithDistance = [calculate_distance(r) for r in restaurants]
+    restaurantsWithDistance = [calculate_score(r) for r in restaurants]
     restaurantsWithDistance = sorted(restaurantsWithDistance, key = lambda x : x[0])
     return [r[1] for r in restaurantsWithDistance[:10]]
 
