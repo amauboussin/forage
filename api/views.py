@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Create your views here.
 from models import Restaurant
 from django.shortcuts import render_to_response
@@ -73,3 +74,4 @@ def scrape(request):
     text = 'scraped'
 
     return render_to_response('test.html', {'message' : text}, context_instance=RequestContext(request))
+
