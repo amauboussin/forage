@@ -211,7 +211,7 @@ def get_restaurants(latitude, longitude):
         rst_long = restaurant.longitude
         distance = math.hypot(latitude - rst_lat, longitude - rst_long) # pythagorean theorem
         rating = getAverageRating(restaurant)
-        score = distance*10000 + rating
+        score = distance*10000 - rating
         return [score, restaurant]
 
     restaurantsWithDistance = [calculate_score(r) for r in restaurants]
