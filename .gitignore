@@ -8,3 +8,5 @@
 *.pyc
 
 forage/local_settings.py
+
+.idea/workspace.xml
