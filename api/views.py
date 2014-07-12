@@ -14,8 +14,6 @@ def scrape_grid_page(request):
 
     return render_to_response('test.html', {'message' : 'finished scraping grid'}, context_instance=RequestContext(request))
 
-
-
 def scrape_grid():
     ywsid = 'nc5nvTckUyLncvvm9Qd8ew'
 
@@ -128,17 +126,10 @@ def get_restaurants(latitude, longitude):
     restaurantsWithDistance = [calculate_distance(r) for r in restaurants]
     restaurantsWithDistance = sorted(restaurantsWithDistance, key = lambda x : x[0])
     return [r[1] for r in restaurantsWithDistance[:10]]
-
-
-def scrape_google(request):
-    lat = 37.433711
-    lat_final = 37.357442
-    lng = -122.110664
-    lng_final = -122.058908
+    
+def crawl_grid(lat, lng, lat_final, lng_final, placeIds):
     increment = 0.005
     key = 'AIzaSyCtQScpB0zS0M4cUfp_Q9g2OrUZaXn8soY'
-
-    placeIds = []
     while lat >= lat_final:
         while lng <= lng_final:
             try:
@@ -155,7 +146,25 @@ def scrape_google(request):
                 lng += increment
 
         lat -= increment
+    return placeIds
 
+def scrape_google(request):
+    key = 'AIzaSyCtQScpB0zS0M4cUfp_Q9g2OrUZaXn8soY'
+    lat = 37.433711
+    lat_final = 37.357442
+    lng = -122.110664
+    lng_final = -122.058908
+
+    placeIds = []
+    placeIds = crawl_grid(lat, lng, lat_final, lng_final, placeIds)
+
+    lat = 37.468186
+    lat_final = 37.327038
+    lng = -122.182154
+    lng_final = -121.952471
+    placeIds = crawl_grid(lat, lng, lat_final, lng_final, placeIds)
+
+    # Finish with a final sweep from our location
     my_lat = 37.423418
     my_lng = -122.071638
     place_search_req = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=50000&types=food&key=%s' % (my_lat, my_lng, key)
