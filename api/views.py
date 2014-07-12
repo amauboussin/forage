@@ -97,7 +97,7 @@ def locate(request):
 
 # returns the ten closest restaurants to (latitude, longitude)
 def get_restaurants(latitude, longitude):
-    restaurants = Restaurant.objects.all()
+    restaurants = Yelp.objects.all()
 
     def calculate_distance(restaurant):
         rst_lat = restaurant.latitude

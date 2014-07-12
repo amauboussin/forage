@@ -6,3 +6,5 @@
 *.pyc
 
 *.pyc
+
+forage/local_settings.py

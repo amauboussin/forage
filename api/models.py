@@ -23,3 +23,6 @@ class Yelp(models.Model):
     average_rating = models.FloatField(default=0)
     num_ratings = models.IntegerField(default=0)
     hours = models.CharField(default="12-10", max_length= 30)
+
+    def __unicode__(self):
+        return str(self.name)
