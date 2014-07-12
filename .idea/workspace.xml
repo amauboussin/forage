@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3eaf9871-2f03-455a-a37c-52aafe4b5c5c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/forage/urls.py" afterPath="$PROJECT_DIR$/forage/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/api/views.py" afterPath="$PROJECT_DIR$/api/views.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="forage.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -81,7 +78,7 @@
       <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/api/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="11" column="0" selection-start="261" selection-end="261" vertical-scroll-proportion="0.26442307">
+            <state line="170" column="19" selection-start="5639" selection-end="5639" vertical-scroll-proportion="1.1926041">
               <folding>
                 <element signature="e#26#62#0" expanded="true" />
               </folding>
@@ -586,7 +583,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/api/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="0" selection-start="261" selection-end="261" vertical-scroll-proportion="0.26442307">
+        <state line="170" column="19" selection-start="5639" selection-end="5639" vertical-scroll-proportion="1.1926041">
           <folding>
             <element signature="e#26#62#0" expanded="true" />
           </folding>
