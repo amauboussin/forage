@@ -1,24 +1,13 @@
-<<<<<<< HEAD
 # Create your views here.
-from models import Restaurant
+from django.http import HttpResponse
+import math
+from models import *
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 from urllib2 import urlopen
 from constants import *
 import json
 
-
-# class Restaurant(models.Model):
-#     name = models.CharField(max_length=100)
-#     created = models.DateTimeField(auto_now_add=True)
-#     address = models.CharField(max_length=200)
-#     genre = models.CharField(max_length=100)
-#     latitude = models.FloatField()
-#     longitude = models.FloatField()
-#     average_rating = models.FloatField(default=0)
-#     num_ratings = models.IntegerField(default=0)
-#     hours = models.CharField(default="12-10", max_length= 30)
-cats = ['afghani', 'african', 'senegalese', 'southafrican', 'newamerican', 'tradamerican', 'arabian', 'argentine', 'armenian', 'asianfusion', 'australian', 'austrian', 'bangladeshi', 'bbq', 'basque', 'belgian', 'brasseries', 'brazilian', 'breakfast_brunch', 'british', 'buffets', 'burgers', 'burmese', 'cafes', 'cafeteria', 'cajun', 'cambodian', 'caribbean', 'dominican', 'haitian', 'puertorican', 'trinidadian', 'catalan', 'cheesesteaks', 'chicken_wings', 'chinese', 'cantonese', 'dimsum', 'shanghainese', 'szechuan', 'comfortfood', 'creperies', 'cuban', 'czech', 'delis', 'diners', 'ethiopian', 'hotdogs', 'filipino', 'fishnchips', 'fondue', 'food_court', 'foodstands', 'french', 'gastropubs', 'german', 'gluten_free', 'greek', 'halal', 'hawaiian', 'himalayan', 'hotdog', 'hotpot', 'hungarian', 'iberian', 'indpak', 'indonesian', 'irish', 'italian', 'japanese', 'ramen', 'korean', 'kosher', 'laotian', 'latin', 'colombian', 'salvadoran', 'venezuelan', 'raw_food', 'malaysian', 'mediterranean', 'falafel', 'mexican', 'mideastern', 'egyptian', 'lebanese', 'modern_european', 'mongolian', 'moroccan', 'pakistani', 'persian', 'peruvian', 'pizza', 'polish', 'portuguese', 'russian', 'salad', 'sandwiches', 'scandinavian', 'scottish', 'seafood', 'singaporean', 'slovakian', 'soulfood', 'soup', 'southern', 'spanish', 'steak', 'sushi', 'taiwanese', 'tapas', 'tapasmallplates', 'tex-mex', 'thai', 'turkish', 'ukrainian', 'uzbek', 'vegan', 'vegetarian', 'vietnamese']
 
 def get_loc(address):
     address = address.replace(' ', '+')
@@ -67,7 +56,7 @@ def scrape(request):
         lat, long = get_loc(address)
         average_rating = b['avg_rating']
         num_ratings = b['review_count']
-        r = Restaurant(name= name, address= address, average_rating = average_rating,
+        r = Yelp(name= name, address= address, average_rating = average_rating,
                    num_ratings = num_ratings,genre = genre, hours = '', latitude = lat, longitude = long)
         print name, genre
         r.save()
@@ -81,33 +70,29 @@ def locate(request):
     # Go through all of the restaurants and find the closest ones
     # Return those as JSON
 
-    lat = float(reqest.GET['lat'])
-    lng = float(request.GET['long'])
+    lat = float(request.GET['lat'])
+    lng = float(request.GET['lon'])
     restaurants = get_restaurants(lat, lng)
 
-    response_data = {}
-    dlist = []
-    for r in restaurants:
-        r_dic = {}
-        r["name"] = restaurant.name
-        r["genre"] = restaurant.genre
-        r["latitude"] = restaurant.latitude
-        r["longitude"] = restaurant.longitude
-        r["address"] = restaurant.address
-        dlist.append(r_dic)
+    response_data = []
+
+    for restaurant in restaurants:
+        response_data.append({'name' : restaurant.name, 'genre' : restaurant.genre,
+                      'latitude' : restaurant.latitude, 'longitude' : restaurant.longitude,
+                      'address' : restaurant.address})
 
     return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 # returns the ten closest restaurants to (latitude, longitude)
-def get_restaurants(restaurants, latitude, longitude):
+def get_restaurants(latitude, longitude):
     restaurants = Restaurant.objects.all()
 
     def calculate_distance(restaurant):
         rst_lat = restaurant.latitude
         rst_long = restaurant.longitude
-        math.hypot(latitude - rst_lat, longitude - rst_long) # pythagorean theorem
+        distance = math.hypot(latitude - rst_lat, longitude - rst_long) # pythagorean theorem
         return [distance, restaurant]
 
-    restaurantsWithDistance = map(calculate_distance, restaurants)
+    restaurantsWithDistance = [calculate_distance(r) for r in restaurants]
     restaurantsWithDistance = sorted(restaurantsWithDistance, key = lambda x : x[0])
-    return restaurantsWithDistance[:10]
+    return [r[1] for r in restaurantsWithDistance[:10]]
