@@ -76,6 +76,28 @@ def scrape(request):
 
     return render_to_response('test.html', {'message' : text}, context_instance=RequestContext(request))
 
+def get_details(place_id):
+    places_api_key = 'AIzaSyCtQScpB0zS0M4cUfp_Q9g2OrUZaXn8soY'
+    details_req = 'https://maps.googleapis.com/maps/api/place/details/json?key=%s&placeid=%s' % (places_api_key, place_id)
+    jsonurl = urlopen(details_req)
+    data = json.loads(jsonurl.read())['result']
+    price = int(data['price_level'])
+    if price <= 2:
+        persist_google_entity(place_id, data)
+
+def persist_google_entity(place_id, data):
+    name = data['name']
+    address = data['vicinity']
+    latLong = data['geometry']['location']
+    latitude = latLong['lat']
+    longitude = latLong['lat']
+    rating = data['rating']
+    price = data['price_level']
+
+    r = GPlace(place_id = place_id, name = name, address = address, latitude = latitude, longitude = longitude,
+                average_rating = rating, hours = '', price = price)
+    r.save()
+
 def locate(request):
     # Turn the request into a lat and long
     # Fetch all restaurants from the database
