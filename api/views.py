@@ -42,19 +42,20 @@ def merge_restaurants(request):
             'place_id': 0,
             '_id': y.address.lower()
         }
-        is_dup = false
+        is_dup = False
         for g in restaurants:
-            if g._id == r._id:
+            if g['_id'] == r['_id']:
                 is_dup = True
-                g.genre = r.genre
-                g.yelp_rating = r.yelp_rating
-                g.num_yelp_ratings = r.num_yelp_ratings
+                g['genre'] = r['genre']
+                g['yelp_rating'] = r['yelp_rating']
+                g['num_yelp_ratings'] = r['num_yelp_ratings']
         if not is_dup:
             restaurants.append(r)
 
     for r in restaurants:
-        r2 = Restaurant2(**r)
-        r2.save()
+        r.pop("_id", None)
+        r = Restaurant2(**r)
+        r.save()
 
 
     return render_to_response('test.html', {'message' : 'finished merging'}, context_instance=RequestContext(request))
@@ -194,7 +195,7 @@ def locate(request):
 
 # returns the ten closest restaurants to (latitude, longitude)
 def get_restaurants(latitude, longitude):
-    restaurants = Yelp.objects.all()
+    restaurants = Restaurant2.objects.all()
 
     def get_average_rating(restaurant):
         if restaurant.yelp_rating != 0 and restaurant.goog_rating != 0:
