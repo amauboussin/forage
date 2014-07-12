@@ -65,8 +65,6 @@ def scrape_grid_page(request):
 
     return render_to_response('test.html', {'message' : 'finished scraping grid'}, context_instance=RequestContext(request))
 
-
-
 def scrape_grid():
     ywsid = 'nc5nvTckUyLncvvm9Qd8ew'
 
@@ -152,7 +150,11 @@ def get_details(place_id):
     details_req = 'https://maps.googleapis.com/maps/api/place/details/json?key=%s&placeid=%s' % (places_api_key, place_id)
     jsonurl = urlopen(details_req)
     data = json.loads(jsonurl.read())['result']
-    price = int(data['price_level'])
+    print data
+
+    if 'price_level' in data:
+        price = int(data['price_level'])
+    else: price = 99
     if price <= 2:
         persist_google_entity(place_id, data)
 
@@ -161,13 +163,15 @@ def persist_google_entity(place_id, data):
     address = data['vicinity']
     latLong = data['geometry']['location']
     latitude = latLong['lat']
-    longitude = latLong['lat']
+    longitude = latLong['lng']
     rating = data['rating']
     price = data['price_level']
 
-    r = GPlace(place_id = place_id, name = name, address = address, latitude = latitude, longitude = longitude,
-                average_rating = rating, hours = '', price = price)
-    r.save()
+    if not GPlace.objects.filter(place_id = place_id).exists():
+        r = GPlace(place_id = place_id, name = name, address = address, latitude = latitude, longitude = longitude,
+                    average_rating = rating, hours = '', price = price)
+        r.save()
+
 
 def locate(request):
     # Turn the request into a lat and long
@@ -192,30 +196,35 @@ def locate(request):
 def get_restaurants(latitude, longitude):
     restaurants = Yelp.objects.all()
 
-    def calculate_distance(restaurant):
+    def get_average_rating(restaurant):
+        if restaurant.yelp_rating != 0 and restaurant.goog_rating != 0:
+            return (restaurant.yelp_rating + restaurant.goog_rating)/2.0
+
+        if restaurant.yelp_rating != 0:
+            return restaurant.yelp_rating
+
+        return restaurant.goog_rating
+
+    def calculate_score(restaurant):
         rst_lat = restaurant.latitude
         rst_long = restaurant.longitude
         distance = math.hypot(latitude - rst_lat, longitude - rst_long) # pythagorean theorem
-        return [distance, restaurant]
+        rating = getAverageRating(restaurant)
+        score = 0.85 * distance + 0.15 * rating
+        return [score, restaurant]
 
     restaurantsWithDistance = [calculate_distance(r) for r in restaurants]
     restaurantsWithDistance = sorted(restaurantsWithDistance, key = lambda x : x[0])
     return [r[1] for r in restaurantsWithDistance[:10]]
 
-def scrape_google(request):
-    lat = 37.433711
-    lat_final = 37.357442
-    lng = -122.110664
-    lng_final = -122.058908
+def crawl_grid(lat, lng, lat_final, lng_final, placeIds):
     increment = 0.005
     key = 'AIzaSyCtQScpB0zS0M4cUfp_Q9g2OrUZaXn8soY'
-
-    placeIds = []
     while lat >= lat_final:
         while lng <= lng_final:
             try:
                 place_search_req = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=500&types=food&key=%s' % (lat, lng, key)
-                jsonurl = urllib.urlopen(place_search_req)
+                jsonurl = urlopen(place_search_req)
                 data = json.loads(jsonurl.read())
                 for result in data['results']:
                     placeId = result['place_id']
@@ -227,12 +236,30 @@ def scrape_google(request):
                 lng += increment
 
         lat -= increment
+    return placeIds
 
+def scrape_google(request):
+    key = 'AIzaSyCtQScpB0zS0M4cUfp_Q9g2OrUZaXn8soY'
+    lat = 37.433711
+    lat_final = 37.357442
+    lng = -122.110664
+    lng_final = -122.058908
+
+    placeIds = []
+    placeIds = crawl_grid(lat, lng, lat_final, lng_final, placeIds)
+
+    lat = 37.468186
+    lat_final = 37.327038
+    lng = -122.182154
+    lng_final = -121.952471
+    placeIds = crawl_grid(lat, lng, lat_final, lng_final, placeIds)
+
+    # Finish with a final sweep from our location
     my_lat = 37.423418
     my_lng = -122.071638
     place_search_req = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=50000&types=food&key=%s' % (my_lat, my_lng, key)
     try:
-        jsonurl = urllib.urlopen(place_search_req)
+        jsonurl = urlopen(place_search_req)
         data = json.loads(jsonurl.read())
         for result in data['results']:
             placeId = result['place_id']
@@ -240,4 +267,8 @@ def scrape_google(request):
                 placeIds.append(placeId)
     except Exception, e:
         print str(e)
-    return placeIds
+    for _id in placeIds:
+        get_details(_id)
+
+    return render_to_response('test.html', {'message' : 'finished scraping google'}, context_instance=RequestContext(request))
+

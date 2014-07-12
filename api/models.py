@@ -30,7 +30,7 @@ class Yelp(models.Model):
     def __unicode__(self):
         return str(self.name)
 
-class GPlace(modelsModel):
+class GPlace(models.Model):
     place_id = models.CharField(max_length=300)
     name = models.CharField(max_length=100)
     created = models.DateTimeField(auto_now_add=True)
