@@ -126,7 +126,7 @@ def get_restaurants(latitude, longitude):
     restaurantsWithDistance = [calculate_distance(r) for r in restaurants]
     restaurantsWithDistance = sorted(restaurantsWithDistance, key = lambda x : x[0])
     return [r[1] for r in restaurantsWithDistance[:10]]
-    
+
 def crawl_grid(lat, lng, lat_final, lng_final, placeIds):
     increment = 0.005
     key = 'AIzaSyCtQScpB0zS0M4cUfp_Q9g2OrUZaXn8soY'
