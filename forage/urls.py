@@ -17,6 +17,7 @@ urlpatterns = patterns('',
 
     #url()
     url(r'scrape',views.scrape ),
-    url(r'locate', views.locate )
+    url(r'locate', views.locate ),
+    url(r'scrape_google', views.scrape_google )
 
 )

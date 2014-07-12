@@ -11,12 +11,51 @@ import json
 
 # tl_lat_orig = 37.433711
 # tl_long_orig = -122.110664
-# br_lat = tl_lat - 0.001
-# br_long = tl_long - 0.001
+# br_lat = tl_lat - 0.005
+# br_long = tl_long - 0.005
 # tl_lat_final = 37.357442
 # tl_long_final = -122.058908
 # DIFF_LAT = -0.076269
 # DIFF_LONG = 0.051756
+def scrape_google(request):
+    lat = 37.433711
+    lat_final = 37.357442
+    lng = -122.110664
+    lng_final = -122.058908
+    increment = 0.005
+    key = 'AIzaSyCtQScpB0zS0M4cUfp_Q9g2OrUZaXn8soY'
+
+    placeIds = []
+    while lat >= lat_final:
+        while lng <= lng_final:
+            try:
+                place_search_req = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=500&types=food&key=%s' % (lat, lng, key)
+                jsonurl = urllib.urlopen(place_search_req)
+                data = json.loads(jsonurl.read())
+                for result in data['results']:
+                    placeId = result['place_id']
+                    if not placeId in placeIds:
+                        placeIds.append(placeId)
+            except Exception, e:
+                print str(e)
+            finally:
+                lng += increment
+
+        lat -= increment
+
+    my_lat = 37.423418
+    my_lng = -122.071638
+    place_search_req = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=50000&types=food&key=%s' % (my_lat, my_lng, key)
+    try:
+        jsonurl = urllib.urlopen(place_search_req)
+        data = json.loads(jsonurl.read())
+        for result in data['results']:
+            placeId = result['place_id']
+            if not placeId in placeIds:
+                placeIds.append(placeId)
+    except Exception, e:
+        print str(e)
+    return placeIds
 
 def get_loc(address):
     address = address.replace(' ', '+')
