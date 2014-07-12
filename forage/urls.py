@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     #url()
+    url(r'scrapegrid',views.scrape_grid_page ),
     url(r'scrape',views.scrape ),
     url(r'locate', views.locate )
 
