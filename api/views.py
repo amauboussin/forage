@@ -117,11 +117,22 @@ def locate(request):
 def get_restaurants(latitude, longitude):
     restaurants = Yelp.objects.all()
 
-    def calculate_distance(restaurant):
+    def get_average_rating(restaurant):
+        if restaurant.yelp_rating != 0 and restaurant.goog_rating != 0:
+            return (restaurant.yelp_rating + restaurant.goog_rating)/2.0
+
+        if restaurant.yelp_rating != 0:
+            return restaurant.yelp_rating
+
+        return restaurant.goog_rating
+
+    def calculate_score(restaurant):
         rst_lat = restaurant.latitude
         rst_long = restaurant.longitude
         distance = math.hypot(latitude - rst_lat, longitude - rst_long) # pythagorean theorem
-        return [distance, restaurant]
+        rating = getAverageRating(restaurant)
+        score = 0.85 * distance + 0.15 * rating
+        return [score, restaurant]
 
     restaurantsWithDistance = [calculate_distance(r) for r in restaurants]
     restaurantsWithDistance = sorted(restaurantsWithDistance, key = lambda x : x[0])
