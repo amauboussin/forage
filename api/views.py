@@ -33,6 +33,7 @@ def scrape_grid():
         br_lat = tl_lat - 0.001
         br_long = tl_long - 0.001
 
+
 def get_loc(address):
     address = address.replace(' ', '+')
     print address
