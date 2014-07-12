@@ -101,7 +101,11 @@ def get_details(place_id):
     details_req = 'https://maps.googleapis.com/maps/api/place/details/json?key=%s&placeid=%s' % (places_api_key, place_id)
     jsonurl = urlopen(details_req)
     data = json.loads(jsonurl.read())['result']
-    price = int(data['price_level'])
+    print data
+
+    if 'price_level' in data:
+        price = int(data['price_level'])
+    else: price = 99
     if price <= 2:
         persist_google_entity(place_id, data)
 
@@ -110,13 +114,14 @@ def persist_google_entity(place_id, data):
     address = data['vicinity']
     latLong = data['geometry']['location']
     latitude = latLong['lat']
-    longitude = latLong['lat']
+    longitude = latLong['lng']
     rating = data['rating']
     price = data['price_level']
 
-    r = GPlace(place_id = place_id, name = name, address = address, latitude = latitude, longitude = longitude,
-                average_rating = rating, hours = '', price = price)
-    r.save()
+    if not GPlace.objects.filter(place_id = place_id).exists():
+        r = GPlace(place_id = place_id, name = name, address = address, latitude = latitude, longitude = longitude,
+                    average_rating = rating, hours = '', price = price)
+        r.save()
 
 def locate(request):
     # Turn the request into a lat and long
@@ -164,7 +169,7 @@ def scrape_google(request):
         while lng <= lng_final:
             try:
                 place_search_req = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=500&types=food&key=%s' % (lat, lng, key)
-                jsonurl = urllib.urlopen(place_search_req)
+                jsonurl = urlopen(place_search_req)
                 data = json.loads(jsonurl.read())
                 for result in data['results']:
                     placeId = result['place_id']
@@ -181,7 +186,7 @@ def scrape_google(request):
     my_lng = -122.071638
     place_search_req = 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=%s,%s&radius=50000&types=food&key=%s' % (my_lat, my_lng, key)
     try:
-        jsonurl = urllib.urlopen(place_search_req)
+        jsonurl = urlopen(place_search_req)
         data = json.loads(jsonurl.read())
         for result in data['results']:
             placeId = result['place_id']
@@ -189,4 +194,8 @@ def scrape_google(request):
                 placeIds.append(placeId)
     except Exception, e:
         print str(e)
-    return placeIds
+    for _id in placeIds:
+        get_details(_id)
+
+    return render_to_response('test.html', {'message' : 'finished scraping google'}, context_instance=RequestContext(request))
+

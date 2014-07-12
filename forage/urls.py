@@ -16,9 +16,9 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     #url()
+    url(r'scrape_google', views.scrape_google ),
     url(r'scrapegrid',views.scrape_grid_page ),
     url(r'scrape',views.scrape ),
     url(r'locate', views.locate ),
-    url(r'scrape_google', views.scrape_google )
 
 )
